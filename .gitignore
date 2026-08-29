@@ -1,0 +1,29 @@
+# Gradle
+.gradle/
+build/
+versions/*/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+.kotlin/
+
+# Minecraft run directories
+run/
+runs/
+versions/*/run/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reference copy of the upstream Bukkit plugin, not ours to redistribute
+BuildPastePlugin-*.jar

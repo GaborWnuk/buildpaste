@@ -1,0 +1,17 @@
+# Shared and per-version/per-loader properties, see
+# https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
+mod.id = "buildpaste"
+mod.name = "BuildPaste"
+mod.group = "dev.gaborwnuk.buildpaste"
+mod.version = "2.1.0"
+
+["26.1.2"]
+# List of releases to be marked compatible on Modrinth/CurseForge
+mod.mc_releases = ["26.1.2"]
+
+[neoforge."26.1.2"]
+mod.mc_compat = "[26.1.2,26.2)"
+# check these on https://projects.neoforged.net/neoforged/neoforge
+# and https://github.com/thedarkcolour/KotlinForForge
+deps.neo_loader = "26.1.2.78"
+deps.kotlin_forge = "6.3.0"
