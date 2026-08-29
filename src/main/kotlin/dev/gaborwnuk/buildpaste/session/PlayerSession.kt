@@ -20,7 +20,12 @@ class UndoRecord(
 	val sizeX: Int,
 	val sizeY: Int,
 	val sizeZ: Int,
-	val uploadDirection: String,
+	/**
+	 * The direction the build was pasted facing.
+	 *
+	 * Restoring uses it for both sides of the rotation, so nothing turns: the captured
+	 * blocks are already oriented the way the world had them.
+	 */
 	val pasteDirection: String,
 	val blocks: List<String>,
 	val data: List<String?>,

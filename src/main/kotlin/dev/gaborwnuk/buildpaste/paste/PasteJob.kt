@@ -181,7 +181,6 @@ class PasteJob(
 			sizeX = sizeX,
 			sizeY = sizeY,
 			sizeZ = sizeZ,
-			uploadDirection = rotateTo,
 			pasteDirection = rotateTo,
 			blocks = previousBlocks,
 			data = previousData,
