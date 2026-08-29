@@ -1,67 +1,44 @@
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "2.4.0"
-	id("net.neoforged.moddev") version "2.0.140"
+	// Since Minecraft 26.1 the game is unobfuscated: use the non-remapping loom variant
+	id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
 }
 
 val javaVersion = JavaVersion.VERSION_25
-val mcVersionRangeForNeoForge: String = sc.properties["mod.mc_compat"]
+val fabricApiVersion: String = sc.properties["deps.fabric_api"]
+val mcVersionRangeForFabric: String = sc.properties["mod.mc_compat"]
 
 group = property("mod.group").toString()
 version = "${property("mod.version")}+${sc.current.version}"
 
 base {
-	archivesName = "${property("mod.id")}-neoforge"
-}
-
-repositories {
-	maven("https://thedarkcolour.github.io/KotlinForForge/") { name = "KotlinForForge" }
-	mavenCentral()
+	archivesName = "${property("mod.id")}-fabric"
 }
 
 dependencies {
-	implementation("thedarkcolour:kotlinforforge-neoforge:${property("deps.kotlin_forge")}")
+	minecraft("com.mojang:minecraft:${sc.current.version}")
+	implementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+	implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+	implementation("net.fabricmc:fabric-language-kotlin:${property("deps.fabric_kotlin")}")
 
 	testImplementation(kotlin("test"))
 }
 
-neoForge {
-	version = sc.properties["deps.neo_loader"]
-
-	mods {
-		register("buildpaste") {
-			sourceSet(sourceSets.main.get())
-		}
-	}
-
-	runs {
-		register("client") {
-			client()
-			gameDirectory = rootProject.file("run")
-		}
-		register("server") {
-			server()
-			gameDirectory = rootProject.file("run")
-		}
-	}
-}
-
 tasks {
 	processResources {
-		inputs.property("minecraftVersionRange", mcVersionRangeForNeoForge)
+		inputs.property("java", javaVersion.majorVersion)
+		inputs.property("minecraftVersionRange", mcVersionRangeForFabric)
 		inputs.property("version", project.version)
 
-		filesMatching("META-INF/neoforge.mods.toml") {
+		filesMatching("fabric.mod.json") {
 			expand(mapOf(
+				"java" to inputs.properties["java"],
 				"minecraftVersionRange" to inputs.properties["minecraftVersionRange"],
 				"version" to inputs.properties["version"],
 			))
 		}
 
-		exclude("fabric.mod.json")
-	}
-
-	named("createMinecraftArtifacts") {
-		dependsOn("stonecutterGenerate")
+		exclude("META-INF/neoforge.mods.toml")
 	}
 
 	test {
@@ -90,8 +67,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 java {
 	sourceCompatibility = javaVersion
 	targetCompatibility = javaVersion
+}
 
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(javaVersion.majorVersion)
+loom {
+	runConfigs.all {
+		generateRunConfig = true // Run configurations are not created for subprojects by default
+		runDirectory = rootProject.file("run") // Use a shared run folder and create separate worlds
 	}
 }

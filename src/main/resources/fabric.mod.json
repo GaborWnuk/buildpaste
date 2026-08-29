@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "buildpaste",
+	"version": "${version}",
+	"name": "BuildPaste",
+	"description": "Paste builds from buildpaste.net straight into your world. An unofficial port of MistrX's BuildPaste Bukkit plugin.",
+	"authors": [
+		"MistrX"
+	],
+	"contributors": [
+		"GaborWnuk"
+	],
+	"contact": {
+		"homepage": "https://buildpaste.net",
+		"sources": "https://github.com/GaborWnuk/buildpaste",
+		"issues": "https://github.com/GaborWnuk/buildpaste/issues"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "dev.gaborwnuk.buildpaste.BuildPasteFabric",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.0",
+		"minecraft": "${minecraftVersionRange}",
+		"java": ">=${java}",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	}
+}

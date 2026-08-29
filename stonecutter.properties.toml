@@ -5,9 +5,20 @@ mod.name = "BuildPaste"
 mod.group = "dev.gaborwnuk.buildpaste"
 mod.version = "2.1.0"
 
+deps.fabric_loader = "0.19.3"
+# Bundles Kotlin 2.4.0, the same version Kotlin for Forge ships, so both loaders build
+# against one Kotlin.
+deps.fabric_kotlin = "1.13.12+kotlin.2.4.0"
+
 ["26.1.2"]
 # List of releases to be marked compatible on Modrinth/CurseForge
 mod.mc_releases = ["26.1.2"]
+
+[fabric."26.1.2"]
+# Mod compatibility range in fabric.mod.json (~26.1.2 means >=26.1.2 <26.2)
+mod.mc_compat = "~26.1.2"
+# check this on https://fabricmc.net/develop
+deps.fabric_api = "0.155.2+26.1.2"
 
 [neoforge."26.1.2"]
 mod.mc_compat = "[26.1.2,26.2)"

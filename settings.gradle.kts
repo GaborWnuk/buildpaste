@@ -1,5 +1,6 @@
 pluginManagement {
 	repositories {
+		maven("https://maven.fabricmc.net/")
 		maven("https://maven.neoforged.net/releases/") { name = "NeoForged" }
 		mavenCentral()
 		gradlePluginPortal()
@@ -25,7 +26,7 @@ stonecutter {
 			for (loader in loaders) version("$project-$loader", version).buildscript("build.$loader.gradle.kts")
 		}
 
-		match("26.1.2", "neoforge")
+		match("26.1.2", "fabric", "neoforge")
 		vcsVersion = "26.1.2-neoforge"
 	}
 }

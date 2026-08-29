@@ -4,17 +4,19 @@ Paste builds from [buildpaste.net](https://buildpaste.net) straight into your wo
 Select two corners, upload what you built, and paste any build back in — turned to
 face whichever way you are looking.
 
+Runs on **Fabric** and **NeoForge**, from one codebase.
+
 ## About this port
 
-This is an unofficial **NeoForge** port of
+This is an unofficial port of
 [BuildPaste](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste), a Bukkit
 server plugin by MistrX.
 
 The reason is simple: the original only exists as a Bukkit/Spigot plugin, and I don't run
 Bukkit. My server and my client are NeoForge, so the plugin could not be installed on
-either — a Bukkit plugin and a NeoForge mod share no code at all. This port keeps the
-behaviour and speaks the same buildpaste.net protocol, so builds uploaded by the original
-plugin paste correctly here and builds uploaded here work anywhere else BuildPaste runs.
+either — a Bukkit plugin and a mod share no code at all. This port keeps the behaviour and
+speaks the same buildpaste.net protocol, so builds uploaded by the original plugin paste
+correctly here, and builds uploaded here work anywhere else BuildPaste runs.
 
 It is dedicated to my son, who would rather spend an afternoon building a castle than
 fighting anything that lives in one :)
@@ -73,6 +75,26 @@ the server restarts.
 
 ## Installing
 
+Download the jar for your loader from the
+[releases](https://github.com/GaborWnuk/buildpaste/releases) — `buildpaste-fabric-*.jar`
+or `buildpaste-neoforge-*.jar` — and drop it in your `mods` folder along with the
+dependencies below.
+
+### Dependencies
+
+| Loader   | Required alongside BuildPaste                                                                                                              |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Fabric   | [Fabric API](https://modrinth.com/mod/fabric-api) and [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) (1.13.12+)   |
+| NeoForge | [Kotlin for Forge](https://github.com/thedarkcolour/KotlinForForge) 6.3.0 or newer                                                            |
+
+Both loaders also need **Java 25**, which is what Minecraft 26.1 itself requires.
+
+The mod declares these in its metadata, so a loader will tell you what is missing rather
+than crashing. Nothing else is bundled — there are no shaded libraries, and JSON handling
+uses the Gson the game already ships.
+
+### Where to install it
+
 The mod is **server-side**. It registers no blocks, items, entities or network channels,
 so:
 
@@ -82,26 +104,25 @@ so:
   piece of paper with a name on them.
 - On a **client**, install it to use the commands in your own singleplayer worlds.
 
-Kotlin for Forge must be installed alongside it, wherever it runs.
+A Fabric server and a NeoForge server each need their own loader's jar, but both speak the
+same buildpaste.net protocol, so builds move freely between them.
 
 ## Supported versions
 
-| Minecraft       | Loader   | Where                                                       |
-| --------------- | -------- | ----------------------------------------------------------- |
-| 26.1.2 or newer | NeoForge | this repository — tested on 26.1.2                          |
-| 1.16 – 1.21.10  | Bukkit   | [the original plugin](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste) |
+| Minecraft       | Loaders          | Where                                                       |
+| --------------- | ---------------- | ----------------------------------------------------------- |
+| 26.1.2 or newer | Fabric, NeoForge | this repository — tested on 26.1.2                          |
+| 1.16 – 1.21.10  | Bukkit           | [the original plugin](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste) |
 
-Required companion mod: **Kotlin for Forge** 6.3.0 or newer.
-
-The mod declares a `[26.1.2,26.2)` version range, so the loader refuses to load it on an
-unsupported version rather than crashing. Support for a newer Minecraft release is added
-by one `match(...)` line in [settings.gradle.kts](settings.gradle.kts).
+The mod declares a `26.1.2`+ version range, so loaders refuse to load it on an unsupported
+version rather than crashing. Support for a newer Minecraft release is added by one
+`match(...)` line in [settings.gradle.kts](settings.gradle.kts).
 
 ## What changed from the plugin
 
-The port is a rewrite against a different platform — Bukkit and NeoForge share no API —
-but it keeps the commands, the chat, and the wire protocol as they were. Along the way it
-fixes a handful of defects in the original:
+The port is a rewrite against a different platform — Bukkit and the mod loaders share no
+API — but it keeps the commands, the chat, and the wire protocol as they were. Along the
+way it fixes a handful of defects in the original:
 
 - **Requests no longer block the server.** Every backend call the plugin made ran
   synchronously inside the command handler, freezing the server for the length of the
@@ -111,11 +132,16 @@ fixes a handful of defects in the original:
   Untabled blocks now travel as their name.
 - **Chests and signs keep their contents.** The protocol has always had a field for
   block-entity data, but the plugin sent it empty and ignored it on the way back, so
-  every build it uploaded pasted hollow. It is captured and restored now.
+  every build it uploaded pasted hollow. It is captured and restored now. Data saved
+  before Minecraft 1.21 is in a layout this version cannot read; those blocks are placed
+  empty and reported rather than half-restored.
 - **Undo restores what was there.** Undo re-applied the paste rotation to the blocks it
   had captured, so restored stairs and logs came back facing the wrong way.
 - **Pasting over a build corrects it.** Placement compared only the block type, so a
   stair already in the right spot but facing the wrong way was left alone.
+- **Blocks the game renamed still paste.** Five names in the shared table — `grass`,
+  `grass_path`, `sign`, `wall_sign` and `chain` — no longer exist, and older builds came
+  out with holes where they were.
 - **Debug output goes to the log**, rather than being broadcast to every player on the
   server as chat.
 
@@ -128,12 +154,25 @@ toolchain resolver.
 ./gradlew build
 ```
 
-The jar lands in `versions/26.1.2-neoforge/build/libs/`.
+This builds both loaders; the jars land in `versions/26.1.2-fabric/build/libs/` and
+`versions/26.1.2-neoforge/build/libs/`.
+
+The two targets share one source tree. Loader-specific code lives behind Stonecutter
+comments (`//? if fabric {`), and only the two entry points need them — everything else is
+plain Minecraft API. To work on one loader in an IDE, switch the active target:
+
+```sh
+./gradlew "Set active project to 26.1.2-fabric"
+./gradlew "Set active project to 26.1.2-neoforge"
+```
+
+Run `./gradlew "Reset active project"` before committing, so the tree goes back to a
+consistent state.
 
 To run a development client or server:
 
 ```sh
-./gradlew :26.1.2-neoforge:runClient
+./gradlew :26.1.2-fabric:runClient
 ./gradlew :26.1.2-neoforge:runServer
 ```
 
