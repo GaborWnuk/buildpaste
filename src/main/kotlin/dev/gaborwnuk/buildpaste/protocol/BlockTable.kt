@@ -6,6 +6,10 @@ package dev.gaborwnuk.buildpaste.protocol
  * A block's **index in this list is its on-wire id**: uploads send integers and
  * downloads receive them, so the order here is part of the protocol and must never
  * change. Blocks that are not in the table travel as quoted names instead.
+ *
+ * The list is reproduced from the Bukkit plugin as-is, quirks included: `melon_stem` and
+ * `pumpkin_stem` each appear twice. Both ids name the same block, so a build referring to
+ * either pastes correctly.
  */
 object BlockTable {
 	val names: List<String> = listOf(
@@ -1154,11 +1158,31 @@ object BlockTable {
 	private val idByName: Map<String, Int> =
 		names.withIndex().associate { (index, name) -> name to index }
 
+	/**
+	 * Blocks the game has renamed since the table was written.
+	 *
+	 * The table dates from the 1.16 era, so builds uploaded years ago name blocks that no
+	 * longer resolve. Without these, a build's grass paths and signs would come out as
+	 * holes. Two further stale entries, `lapis_lazuli` and `amethyst_bud`, are left alone:
+	 * neither was ever a real block, so no upload can contain them.
+	 */
+	private val RENAMED = mapOf(
+		"grass" to "short_grass",
+		"grass_path" to "dirt_path",
+		"sign" to "oak_sign",
+		"wall_sign" to "oak_wall_sign",
+		"chain" to "iron_chain",
+	)
+
 	/** Wire id for a block name, with or without the `minecraft:` prefix, or null if untabled. */
 	fun idOf(name: String): Int? = idByName[name.removePrefix("minecraft:")]
 
-	/** Namespaced block name for a wire id, or null if the id is out of range. */
-	fun nameOf(id: Int): String? = names.getOrNull(id)?.let { "minecraft:$it" }
+	/**
+	 * Namespaced block name for a wire id, or null if the id is out of range.
+	 *
+	 * Names the game has since renamed are translated, so that old builds still paste.
+	 */
+	fun nameOf(id: Int): String? = names.getOrNull(id)?.let { "minecraft:${RENAMED[it] ?: it}" }
 
 	/**
 	 * Resolves either form the backend may send for a block: a numeric id (possibly

@@ -1,0 +1,41 @@
+modLoader = "kotlinforforge"
+loaderVersion = "[6,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/GaborWnuk/buildpaste/issues"
+
+[[mods]]
+modId = "buildpaste"
+version = "${version}"
+displayName = "BuildPaste"
+displayURL = "https://buildpaste.net"
+authors = "MistrX, GaborWnuk"
+credits = "Original Bukkit plugin by MistrX, https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste"
+description = '''
+Paste builds from buildpaste.net straight into your world. Select a region, upload it,
+and paste any build back in, turned to face the way you are looking.
+
+An unofficial NeoForge port of MistrX's BuildPaste Bukkit plugin. All server-side: it
+registers no blocks, items or network channels, so a server running it accepts players
+who do not have it installed.
+'''
+
+[[dependencies.buildpaste]]
+modId = "neoforge"
+type = "required"
+versionRange = "${minecraftVersionRange}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.buildpaste]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraftVersionRange}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.buildpaste]]
+modId = "kotlinforforge"
+type = "required"
+versionRange = "[6.3.0,)"
+ordering = "NONE"
+side = "BOTH"
