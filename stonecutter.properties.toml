@@ -3,7 +3,7 @@
 mod.id = "buildpaste"
 mod.name = "BuildPaste (Fabric, NeoForge, Server)"
 mod.group = "dev.gaborwnuk.buildpaste"
-mod.version = "2.2.0"
+mod.version = "2.3.0"
 
 deps.fabric_loader = "0.19.3"
 # Bundles Kotlin 2.4.0, the same version Kotlin for Forge ships, so both loaders build
@@ -25,4 +25,16 @@ mod.mc_compat = "[26.1.2,26.2)"
 # check these on https://projects.neoforged.net/neoforged/neoforge
 # and https://github.com/thedarkcolour/KotlinForForge
 deps.neo_loader = "26.1.2.78"
+deps.kotlin_forge = "6.3.0"
+
+["26.2"]
+mod.mc_releases = ["26.2"]
+
+[fabric."26.2"]
+mod.mc_compat = "~26.2"
+deps.fabric_api = "0.159.0+26.2"
+
+[neoforge."26.2"]
+mod.mc_compat = "[26.2,26.3)"
+deps.neo_loader = "26.2.0.79"
 deps.kotlin_forge = "6.3.0"

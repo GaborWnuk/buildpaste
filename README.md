@@ -116,14 +116,20 @@ same buildpaste.net protocol, so builds move freely between them.
 
 ## Supported versions
 
-| Minecraft       | Loaders          | Where                                                       |
-| --------------- | ---------------- | ----------------------------------------------------------- |
-| 26.1.2 or newer | Fabric, NeoForge | this fork — tested on 26.1.2                                |
-| 1.16 – 1.21.10  | Bukkit           | [the original plugin](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste) |
+| Minecraft      | Loaders          | Jar                                    |
+| -------------- | ---------------- | -------------------------------------- |
+| 26.2           | Fabric, NeoForge | `buildpaste-{loader}-<version>+26.2.jar`   |
+| 26.1.2         | Fabric, NeoForge | `buildpaste-{loader}-<version>+26.1.2.jar` |
+| 1.16 – 1.21.10 | Bukkit           | [the original plugin](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste) |
 
-The mod declares a `26.1.2`+ version range, so loaders refuse to load it on an unsupported
-version rather than crashing. Support for a newer Minecraft release is added by one
-`match(...)` line in [settings.gradle.kts](settings.gradle.kts).
+Each release ships four jars, one per Minecraft version and loader. **Take the one whose
+version matches your game**: a jar declares a narrow range (`~26.2`, `[26.2,26.3)`), so a
+loader refuses to load the wrong one rather than crashing.
+
+Support for a newer Minecraft release is one `match(...)` line in
+[settings.gradle.kts](settings.gradle.kts) plus a version block in
+[stonecutter.properties.toml](stonecutter.properties.toml). 26.2 needed no source changes
+at all — the mod uses only APIs that were stable across the drop.
 
 ## What changed from the plugin
 
@@ -161,15 +167,15 @@ toolchain resolver.
 ./gradlew build
 ```
 
-This builds both loaders; the jars land in `versions/26.1.2-fabric/build/libs/` and
-`versions/26.1.2-neoforge/build/libs/`.
+This builds every Minecraft version and loader; the jars land in
+`versions/<version>-<loader>/build/libs/`.
 
 The two targets share one source tree. Loader-specific code lives behind Stonecutter
 comments (`//? if fabric {`), and only the two entry points need them — everything else is
 plain Minecraft API. To work on one loader in an IDE, switch the active target:
 
 ```sh
-./gradlew "Set active project to 26.1.2-fabric"
+./gradlew "Set active project to 26.2-fabric"
 ./gradlew "Set active project to 26.1.2-neoforge"
 ```
 
@@ -184,9 +190,12 @@ checkout, which is what CI builds, is never affected.
 To run a development client or server:
 
 ```sh
-./gradlew :26.1.2-fabric:runClient
-./gradlew :26.1.2-neoforge:runServer
+./gradlew :26.2-fabric:runClient
+./gradlew :26.2-neoforge:runServer
 ```
+
+Kill any leftover server JVM before starting another one — they share the `run` folder,
+and a second server dies on the world lock or the port.
 
 ## Credits and licences
 

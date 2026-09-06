@@ -1,5 +1,5 @@
 # Builds every loader target on each push and pull request. Whenever a tag is
-# pushed (e.g. `git tag v2.2.0 && git push origin v2.2.0`), the Fabric and
+# pushed (e.g. `git tag v2.3.0 && git push origin v2.3.0`), the Fabric and
 # NeoForge jars are attached to a GitHub release and uploaded to Modrinth
 # (https://modrinth.com/mod/buildpaste-fabric-neoforge-server), which needs the
 # MODRINTH_TOKEN secret set on this repository.
@@ -59,12 +59,22 @@ jobs:
           name: BuildPaste-${{ matrix.minecraftVersion }}
           path: versions/${{ matrix.minecraftVersion }}/build/libs/
 
-      - name: Publish release (GitHub + Modrinth)
+      # Publishing is split so that the two destinations cannot take each other down.
+      # A single combined step aborts before writing anything if either platform is
+      # rejected, which is how a bad Modrinth token once left a tag with no release
+      # at all. GitHub goes first because it is the one that must always land.
+      - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-tag: ${{ github.ref_name }}
+          files: versions/${{ matrix.minecraftVersion }}/build/libs/*.jar
+
+      - name: Publish to Modrinth
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
           modrinth-id: buildpaste-fabric-neoforge-server
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: versions/${{ matrix.minecraftVersion }}/build/libs/*.jar
