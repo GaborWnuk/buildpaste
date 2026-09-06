@@ -6,17 +6,18 @@ issueTrackerURL = "https://github.com/GaborWnuk/buildpaste/issues"
 [[mods]]
 modId = "buildpaste"
 version = "${version}"
-displayName = "BuildPaste"
+displayName = "${name}"
 displayURL = "https://buildpaste.net"
+logoFile = "assets/buildpaste/icon.png"
 authors = "MistrX, GaborWnuk"
-credits = "Original Bukkit plugin by MistrX, https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste"
+credits = "Forked from the BuildPaste Bukkit plugin by MistrX (https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste). Icon by SimplexDesignss, CC BY-NC-ND 3.0 - see assets/buildpaste/ICON-LICENSE.txt"
 description = '''
 Paste builds from buildpaste.net straight into your world. Select a region, upload it,
 and paste any build back in, turned to face the way you are looking.
 
-An unofficial NeoForge port of MistrX's BuildPaste Bukkit plugin. All server-side: it
-registers no blocks, items or network channels, so a server running it accepts players
-who do not have it installed.
+A fork of MistrX's BuildPaste Bukkit plugin, rebuilt for Fabric and NeoForge. Entirely
+server-side: it registers no blocks, items or network channels, so a server running it
+accepts players who do not have it installed.
 '''
 
 [[dependencies.buildpaste]]

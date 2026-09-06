@@ -1,22 +1,28 @@
-# BuildPaste
+<img src="icon.png" alt="" width="96" align="right">
+
+# BuildPaste (Fabric, NeoForge, Server)
 
 Paste builds from [buildpaste.net](https://buildpaste.net) straight into your world.
 Select two corners, upload what you built, and paste any build back in — turned to
 face whichever way you are looking.
 
-Runs on **Fabric** and **NeoForge**, from one codebase.
+A **server-side** mod for **Fabric** and **NeoForge**, built from one codebase.
 
-## About this port
+## About this fork
 
-This is an unofficial port of
-[BuildPaste](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste), a Bukkit
-server plugin by MistrX.
+This is a fork of [BuildPaste](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste),
+a Bukkit server plugin by **MistrX**.
 
 The reason is simple: the original only exists as a Bukkit/Spigot plugin, and I don't run
 Bukkit. My server and my client are NeoForge, so the plugin could not be installed on
-either — a Bukkit plugin and a mod share no code at all. This port keeps the behaviour and
-speaks the same buildpaste.net protocol, so builds uploaded by the original plugin paste
-correctly here, and builds uploaded here work anywhere else BuildPaste runs.
+either — a Bukkit plugin and a mod share no code at all, so carrying it across meant
+rewriting it against the mod loaders' APIs. What it does, how its commands read, and the
+buildpaste.net protocol it speaks are unchanged: builds uploaded by the original plugin
+paste correctly here, and builds uploaded here work anywhere else BuildPaste runs.
+
+The name says what the fork adds, because that is the whole point of it: **Fabric**,
+**NeoForge**, and **Server** — it runs on a server without its players needing to install
+anything.
 
 It is dedicated to my son, who would rather spend an afternoon building a castle than
 fighting anything that lives in one :)
@@ -75,10 +81,11 @@ the server restarts.
 
 ## Installing
 
-Download the jar for your loader from the
-[releases](https://github.com/GaborWnuk/buildpaste/releases) — `buildpaste-fabric-*.jar`
-or `buildpaste-neoforge-*.jar` — and drop it in your `mods` folder along with the
-dependencies below.
+Get the jar for your loader from
+[Modrinth](https://modrinth.com/mod/buildpaste-fabric-neoforge-server) or the
+[releases page](https://github.com/GaborWnuk/buildpaste/releases) —
+`buildpaste-fabric-*.jar` or `buildpaste-neoforge-*.jar` — and drop it in your `mods`
+folder along with the dependencies below.
 
 ### Dependencies
 
@@ -95,8 +102,8 @@ uses the Gson the game already ships.
 
 ### Where to install it
 
-The mod is **server-side**. It registers no blocks, items, entities or network channels,
-so:
+The mod is **server-side**, which is the third word in its name. It registers no blocks,
+items, entities or network channels, so:
 
 - On a **server**, it is the only place it needs to be installed. Players can join with an
   unmodded client and still use every command — the commands and the chat buttons come
@@ -111,7 +118,7 @@ same buildpaste.net protocol, so builds move freely between them.
 
 | Minecraft       | Loaders          | Where                                                       |
 | --------------- | ---------------- | ----------------------------------------------------------- |
-| 26.1.2 or newer | Fabric, NeoForge | this repository — tested on 26.1.2                          |
+| 26.1.2 or newer | Fabric, NeoForge | this fork — tested on 26.1.2                                |
 | 1.16 – 1.21.10  | Bukkit           | [the original plugin](https://legacy.curseforge.com/minecraft/bukkit-plugins/buildpaste) |
 
 The mod declares a `26.1.2`+ version range, so loaders refuse to load it on an unsupported
@@ -120,7 +127,7 @@ version rather than crashing. Support for a newer Minecraft release is added by 
 
 ## What changed from the plugin
 
-The port is a rewrite against a different platform — Bukkit and the mod loaders share no
+The fork is a rewrite against a different platform — Bukkit and the mod loaders share no
 API — but it keeps the commands, the chat, and the wire protocol as they were. Along the
 way it fixes a handful of defects in the original:
 
@@ -169,6 +176,11 @@ plain Minecraft API. To work on one loader in an IDE, switch the active target:
 Run `./gradlew "Reset active project"` before committing, so the tree goes back to a
 consistent state.
 
+Switching the active target rewrites the shared sources in place, which Gradle's
+up-to-date checks do not notice — so **run `./gradlew clean build` after a switch**, or
+the previous target's classes linger and you get a jar missing its entry point. A fresh
+checkout, which is what CI builds, is never affected.
+
 To run a development client or server:
 
 ```sh
@@ -176,9 +188,17 @@ To run a development client or server:
 ./gradlew :26.1.2-neoforge:runServer
 ```
 
-## Credits
+## Credits and licences
 
-Original BuildPaste plugin and the buildpaste.net service by **MistrX** — thank you. This
-port is not affiliated with or endorsed by them.
+The original BuildPaste plugin and the buildpaste.net service are by **MistrX** — thank
+you. This fork is not affiliated with or endorsed by them.
 
-The port is licensed under the [MIT license](LICENSE).
+The mod's own code is licensed under the [MIT licence](LICENSE).
+
+The icon is **not** covered by that licence. It is
+["Minecraft Windows 11 Folder ICO PNG" by SimplexDesignss](https://www.deviantart.com/simplexdesignss/art/Minecraft-Windows-11-Folder-ICO-PNG-950630441),
+used under the Creative Commons
+[Attribution-NonCommercial-NoDerivatives 3.0](https://creativecommons.org/licenses/by-nc-nd/3.0/)
+licence. It is redistributed unchanged, as that licence requires: it must not be resized,
+recoloured or otherwise altered, and it must not be put to commercial use. The same notice
+travels inside the jar, at `assets/buildpaste/ICON-LICENSE.txt`.

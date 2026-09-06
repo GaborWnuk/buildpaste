@@ -1,0 +1,12 @@
+The mod icon (assets/buildpaste/icon.png) is not covered by this project's MIT
+licence.
+
+    "Minecraft Windows 11 Folder ICO PNG" by SimplexDesignss
+    https://www.deviantart.com/simplexdesignss/art/Minecraft-Windows-11-Folder-ICO-PNG-950630441
+
+    Licensed under the Creative Commons
+    Attribution-NonCommercial-NoDerivatives 3.0 licence.
+    https://creativecommons.org/licenses/by-nc-nd/3.0/
+
+The file is redistributed unchanged, as that licence requires. It must not be
+resized, recoloured or otherwise altered, and it must not be used commercially.

@@ -8,11 +8,14 @@ val javaVersion = JavaVersion.VERSION_25
 val fabricApiVersion: String = sc.properties["deps.fabric_api"]
 val mcVersionRangeForFabric: String = sc.properties["mod.mc_compat"]
 
+val modId: String = property("mod.id").toString()
+val modName: String = property("mod.name").toString()
+
 group = property("mod.group").toString()
 version = "${property("mod.version")}+${sc.current.version}"
 
 base {
-	archivesName = "${property("mod.id")}-fabric"
+	archivesName = "$modId-fabric"
 }
 
 dependencies {
@@ -29,13 +32,19 @@ tasks {
 		inputs.property("java", javaVersion.majorVersion)
 		inputs.property("minecraftVersionRange", mcVersionRangeForFabric)
 		inputs.property("version", project.version)
+		inputs.property("name", modName)
 
 		filesMatching("fabric.mod.json") {
 			expand(mapOf(
 				"java" to inputs.properties["java"],
 				"minecraftVersionRange" to inputs.properties["minecraftVersionRange"],
 				"version" to inputs.properties["version"],
+				"name" to inputs.properties["name"],
 			))
+		}
+
+		from(rootProject.file("icon.png")) {
+			into("assets/$modId")
 		}
 
 		exclude("META-INF/neoforge.mods.toml")

@@ -1,9 +1,9 @@
 # Shared and per-version/per-loader properties, see
 # https://stonecutter.kikugie.dev/wiki/config/properties#centralized-properties
 mod.id = "buildpaste"
-mod.name = "BuildPaste"
+mod.name = "BuildPaste (Fabric, NeoForge, Server)"
 mod.group = "dev.gaborwnuk.buildpaste"
-mod.version = "2.1.0"
+mod.version = "2.2.0"
 
 deps.fabric_loader = "0.19.3"
 # Bundles Kotlin 2.4.0, the same version Kotlin for Forge ships, so both loaders build

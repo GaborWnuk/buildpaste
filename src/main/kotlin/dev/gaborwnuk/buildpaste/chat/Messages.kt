@@ -112,7 +112,7 @@ object Messages {
 		)
 
 	fun about(): Component =
-		plain("BuildPaste makes it easy to paste any kind of build into your world.\n").append(
+		plain("BuildPaste for Fabric and NeoForge makes it easy to paste any kind of build into your world.\n").append(
 			buttonRow(
 				linkButton(
 					"Visit buildpaste.net",
