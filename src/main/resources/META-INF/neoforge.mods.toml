@@ -40,3 +40,9 @@ type = "required"
 versionRange = "[6.3.0,)"
 ordering = "NONE"
 side = "BOTH"
+# Kotlin for Forge is listed under a different slug on both mod sites than its mod id.
+# Without this mc-publish asks for a project called "kotlinforforge", finds none, and
+# publishes the file with no dependency on it at all.
+[dependencies.buildpaste.mc-publish]
+modrinth = "kotlin-for-forge"
+curseforge = "kotlin-for-forge"

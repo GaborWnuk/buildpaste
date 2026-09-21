@@ -82,8 +82,9 @@ the server restarts.
 ## Installing
 
 Get the jar for your loader from
-[Modrinth](https://modrinth.com/mod/buildpaste-fabric-neoforge-server) or the
-[releases page](https://github.com/GaborWnuk/buildpaste/releases) —
+[Modrinth](https://modrinth.com/mod/buildpaste-fabric-neoforge-server),
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/buildpaste-fabric-neoforge-server)
+or the [releases page](https://github.com/GaborWnuk/buildpaste/releases) —
 `buildpaste-fabric-*.jar` or `buildpaste-neoforge-*.jar` — and drop it in your `mods`
 folder along with the dependencies below.
 
