@@ -3,7 +3,7 @@
 mod.id = "buildpaste"
 mod.name = "BuildPaste (Fabric, NeoForge, Server)"
 mod.group = "dev.gaborwnuk.buildpaste"
-mod.version = "2.3.0"
+mod.version = "2.3.1"
 
 deps.fabric_loader = "0.19.3"
 # Bundles Kotlin 2.4.0, the same version Kotlin for Forge ships, so both loaders build
